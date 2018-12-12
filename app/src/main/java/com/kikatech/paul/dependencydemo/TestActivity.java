@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.kikatech.paul.dynamicplugin.Plugin;
 import com.kikatech.paul.dynamicplugin.PluginManager;
 
+import java.io.IOException;
+
+/**
+ * @author puzhao
+ */
 public class TestActivity extends AppCompatActivity {
 
     PluginManager pluginManager;
@@ -37,25 +41,37 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+        initTest();
+    }
 
+    private void initTest(){
         pluginManager = PluginManager.getInstance();
         versionCode = PLUGIN1_VERSION_CODE;
 
-        findViewById(R.id.plugin1_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin1_btn)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Plugin plugin = new Plugin(v.getContext(),
-                        PLUGIN1_PACKAGE_NAME, versionCode, PLUGIN1_APK_NAME);
-                if(pluginManager.addPlugin(plugin)){
-                    Toast.makeText(v.getContext(), "add plugin1 successfully", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(v.getContext(), "add plugin1 failed", Toast.LENGTH_SHORT).show();
+                Plugin plugin = null;
+                try {
+                    plugin = new Plugin(v.getContext(),
+                            PLUGIN1_PACKAGE_NAME, versionCode, PLUGIN1_APK_NAME);
+                    if(pluginManager.addPlugin(plugin)){
+                        Toast.makeText(v.getContext(), "add plugin1 successfully", Toast.LENGTH_SHORT).show();
+                        versionCode += ".1";
+                        return;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-                versionCode += ".1";
+                Toast.makeText(v.getContext(), "add plugin1 failed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        findViewById(R.id.remove_plugin1_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.remove_plugin1_btn)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(pluginManager.removePlugin(PLUGIN1_APK_NAME)){
@@ -67,21 +83,30 @@ public class TestActivity extends AppCompatActivity {
         });
 
         versionCode2 = PLUGIN2_VERSION_CODE;
-        findViewById(R.id.plugin2_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin2_btn)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Plugin plugin = new Plugin(v.getContext(),
-                        PLUGIN2_PACKAGE_NAME, PLUGIN2_VERSION_CODE, PLUGIN2_APK_NAME);
-                if(pluginManager.addPlugin(plugin)){
-                    Toast.makeText(v.getContext(), "add plugin2 successfully", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(v.getContext(), "add plugin2 failed", Toast.LENGTH_SHORT).show();
+                Plugin plugin = null;
+                try {
+                    plugin = new Plugin(v.getContext(),
+                            PLUGIN2_PACKAGE_NAME, versionCode2, PLUGIN2_APK_NAME);
+                    if(pluginManager.addPlugin(plugin)){
+                        Toast.makeText(v.getContext(), "add plugin2 successfully", Toast.LENGTH_SHORT).show();
+                        versionCode2 += ".2";
+                        return;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-                versionCode2 += ".2";
+                Toast.makeText(v.getContext(), "add plugin2 failed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        findViewById(R.id.remove_plugin2_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.remove_plugin2_btn)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(pluginManager.removePlugin(PLUGIN2_APK_NAME)){
@@ -92,7 +117,8 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.load_fragment1).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.load_fragment1)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean isSuccess = false;
@@ -142,7 +168,8 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.clean_fragment_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.clean_fragment_btn)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (Fragment fragment: getSupportFragmentManager().getFragments()){
@@ -151,9 +178,6 @@ public class TestActivity extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Clean all fragment", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 
 }

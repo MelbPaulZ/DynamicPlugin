@@ -33,7 +33,6 @@ public class PluginResources extends Resources {
                 try {
                     AssetManager assetManager = AssetManager.class.newInstance();
                     method.invoke(assetManager, apk.getAbsolutePath());
-
                     return assetManager;
                 } catch (InstantiationException e) {
                     e.printStackTrace();

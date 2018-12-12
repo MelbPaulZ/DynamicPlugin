@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,16 +27,12 @@ public class Plugin {
     private AssetManager assetManager;
     private Resources pluginResources;
 
-    public Plugin(Context context, String packageName, String versionCode, String pluginApkName) {
+    public Plugin(Context context, String packageName, String versionCode, String pluginApkName) throws IOException, ClassNotFoundException {
         this.context = context;
         this.packageName = packageName;
         this.versionCode = versionCode;
         this.pluginApkName = pluginApkName;
         init();
-    }
-
-    public Resources getResources() {
-        return pluginResources;
     }
 
     public Class<?> loadClass(String className) throws ClassNotFoundException {
@@ -46,32 +43,29 @@ public class Plugin {
         return dexClassLoader.loadClass(className);
     }
 
-    private void init() {
-        filePath = context.getCacheDir() + File.separator + pluginApkName;
-        apkFile = new File(filePath);
-
-        try {
-            if (apkFile.exists()) {
-                createAssetManagerAndPluginResources();
-                initClassLoader();
-
-            } else {
-                createFileFromAssets(pluginApkName, filePath);
-                createAssetManagerAndPluginResources();
-                initClassLoader();
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void init() throws ClassNotFoundException, IOException {
+        if (FileUtil.ExistSDCard()) {
+            filePath = context.getExternalCacheDir() + File.separator + pluginApkName;
+        }else{
+            filePath = context.getCacheDir() + File.separator + pluginApkName;
         }
+        apkFile = new File(filePath);
+        if (apkFile.exists()) {
+            createAssetManagerAndPluginResources();
+            initClassLoader();
+
+        } else {
+            createFileFromAssets(filePath);
+            createAssetManagerAndPluginResources();
+            initClassLoader();
+        }
+
     }
 
     private void createAssetManagerAndPluginResources() throws ClassNotFoundException {
         assetManager = PluginResources.getPluginAssetManager(apkFile);
         pluginResources = PluginResources.getPluginResources(context.getResources(), assetManager);
     }
-
 
     private void initClassLoader() {
         if (apkFile == null) {
@@ -89,9 +83,8 @@ public class Plugin {
         dexClassLoader = new DexClassLoader(apkFilePath, optimizeDirectory, null, context.getClassLoader());
     }
 
-    // TODO: 11/12/18 For production environment, need to change assets to other folder
-    private void createFileFromAssets(String fileName, String filePath) throws IOException {
-        InputStream is = context.getAssets().open(fileName);
+    private void createFileFromAssets(String filePath) throws IOException {
+        InputStream is = new FileInputStream(apkFile);
         FileOutputStream os = new FileOutputStream(filePath);
         int len = 0;
         byte[] buffer = new byte[1024];
@@ -120,5 +113,9 @@ public class Plugin {
 
     public File getPluginApk(){
         return apkFile;
+    }
+
+    public Resources getResources() {
+        return pluginResources;
     }
 }
