@@ -86,7 +86,7 @@ public class Plugin {
         }
         String optimizeDirectory = optimizedDirectoryFile.getAbsolutePath();
 
-        dexClassLoader = new ApkClassLoader(apkFilePath, optimizeDirectory, null, context.getClassLoader());
+        dexClassLoader = new DexClassLoader(apkFilePath, optimizeDirectory, null, context.getClassLoader());
     }
 
     // TODO: 11/12/18 For production environment, need to change assets to other folder
