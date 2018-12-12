@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/plugin1_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load plugin1"/>
+
+    <Button
+        android:id="@+id/plugin2_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load plugin2"/>
+
+    <Button
+        android:id="@+id/remove_plugin1_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove plugin1"/>
+
+    <Button
+        android:id="@+id/remove_plugin2_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remove plugin2"/>
+
+    <Button
+        android:id="@+id/load_fragment1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load fragment1"/>
+
+    <Button
+        android:id="@+id/load_fragment2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load fragment2"/>
+
+    <Button
+        android:id="@+id/clean_fragment_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="clean all fragment"/>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

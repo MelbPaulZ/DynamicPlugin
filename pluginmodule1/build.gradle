@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.kikatech.paul.pluginmodule1"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    aaptOptions{
+        additionalParameters "--package-id", "0x80"
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+//打包任务
+task makeJar(type:org.gradle.api.tasks.bundling.Jar) {
+    //指定生成的jar名
+    baseName 'dynamic'
+    //从哪里打包class文件
+    from('/Users/puzhao/Paul/Programming/kika/dependencydemo/pluginmodule1/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/kikatech/paul/pluginmodule1/')
+    //打包到jar后的目录结构
+//    setDestinationDir(new File('/Users/puzhao/Paul/Programming/kika/dependencydemo/demolib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/kikatech/paul/demolib/'))
+    into('com/kikatech/paul/pluginmodule1/')
+    //去掉不需要打包的目录和文件
+    exclude('test/', 'BuildConfig.class', 'R.class')
+    //去掉R$开头的文件
+    exclude{ it.name.startsWith('R$')}
+}
