@@ -59,7 +59,6 @@ public class Plugin {
             createAssetManagerAndPluginResources();
             initClassLoader();
         }
-
     }
 
     private void createAssetManagerAndPluginResources() throws ClassNotFoundException {
@@ -79,7 +78,6 @@ public class Plugin {
             return;
         }
         String optimizeDirectory = optimizedDirectoryFile.getAbsolutePath();
-
         dexClassLoader = new DexClassLoader(apkFilePath, optimizeDirectory, null, context.getClassLoader());
     }
 
