@@ -45,6 +45,12 @@
         android:layout_height="wrap_content"
         android:text="clean all fragment"/>
 
+    <Button
+        android:id="@+id/load_remote_activity_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="load remote activity"/>
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"

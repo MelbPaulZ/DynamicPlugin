@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import dalvik.system.DexClassLoader;
+
 /**
  * @author puzhao
  */
@@ -19,6 +21,7 @@ public class PluginManager implements PluginListener {
     private final static String TAG = "PluginManager";
     private Context context;
     private Map<String, Plugin> pluginApkNameToPluginMap;
+    private PluginsDexClassLoader pluginsDexClassLoader;
     private volatile static boolean isInit = false;
     private static PluginManager instance;
     private Resources pluginTotalResources;
@@ -26,6 +29,7 @@ public class PluginManager implements PluginListener {
     private PluginManager(Context context) {
         this.context = context;
         pluginApkNameToPluginMap = new HashMap<>();
+        pluginsDexClassLoader = new PluginsDexClassLoader(context.getClassLoader());
     }
 
     public synchronized static void init(Context context) {
@@ -34,6 +38,7 @@ public class PluginManager implements PluginListener {
         }
         instance = new PluginManager(context);
         isInit = true;
+        PluginHooker.hookInstrumentation(context);
     }
 
     public static PluginManager getInstance() {
@@ -56,12 +61,14 @@ public class PluginManager implements PluginListener {
                 String originVersionCode = originPlugin.getVersionCode();
                 if (!originVersionCode.equals(plugin.getVersionCode())) {
                     pluginApkNameToPluginMap.put(plugin.getPluginApkName(), plugin);
+                    pluginsDexClassLoader.addOrReplaceDexClassLoader(plugin.getPluginApkName(), plugin.getDexClassLoader());
                     onPluginReloaded(pluginApkName, plugin.getVersionCode());
                     return true;
                 }
             }
         } else {
             pluginApkNameToPluginMap.put(pluginApkName, plugin);
+            pluginsDexClassLoader.addOrReplaceDexClassLoader(plugin.getPackageName(), plugin.getDexClassLoader());
             onPluginLoaded(pluginApkName);
             return true;
         }
@@ -72,6 +79,11 @@ public class PluginManager implements PluginListener {
         Plugin removedPlugin = pluginApkNameToPluginMap.remove(name);
         if (removedPlugin == null) {
             LogUtil.e(TAG, "Plugin with name " + name + " is not existed, no need to remove");
+            return false;
+        }
+        DexClassLoader removedPluginDexLoader = pluginsDexClassLoader.removeDexClassLoader(name);
+        if (removedPluginDexLoader == null){
+            LogUtil.e(TAG, "plugin dexloader with name " + name + " is not exist");
             return false;
         }
         onPluginRemoved(name);
@@ -98,6 +110,10 @@ public class PluginManager implements PluginListener {
     @Nullable
     public Resources getResources() {
         return pluginTotalResources;
+    }
+
+    public PluginsDexClassLoader getPluginsDexClassLoader() {
+        return pluginsDexClassLoader;
     }
 
     /**

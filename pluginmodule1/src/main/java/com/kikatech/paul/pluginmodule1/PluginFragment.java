@@ -12,14 +12,26 @@ import android.view.ViewGroup;
  * @author puzhao
  */
 public class PluginFragment extends Fragment {
+
+    private View v;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        View v = new View(getContext());
 //        v.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 //        return v;
-        return inflater.inflate(R.layout.fragment_plugin, container, false);
+        v = inflater.inflate(R.layout.fragment_plugin, container, false);
+        return v;
     }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        v.findViewById(R.id.plugin_fragment_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+    }
 }

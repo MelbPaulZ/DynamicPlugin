@@ -55,7 +55,7 @@ public class Plugin {
             initClassLoader();
 
         } else {
-            createFileFromAssets(filePath);
+            createFileFromFilePath(filePath);
             createAssetManagerAndPluginResources();
             initClassLoader();
         }
@@ -81,7 +81,7 @@ public class Plugin {
         dexClassLoader = new DexClassLoader(apkFilePath, optimizeDirectory, null, context.getClassLoader());
     }
 
-    private void createFileFromAssets(String filePath) throws IOException {
+    private void createFileFromFilePath(String filePath) throws IOException {
         InputStream is = new FileInputStream(apkFile);
         FileOutputStream os = new FileOutputStream(filePath);
         int len = 0;
@@ -115,5 +115,9 @@ public class Plugin {
 
     public Resources getResources() {
         return pluginResources;
+    }
+
+    public DexClassLoader getDexClassLoader() {
+        return dexClassLoader;
     }
 }

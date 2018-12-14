@@ -1,7 +1,9 @@
 package com.kikatech.paul.dependencydemo;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,7 +17,7 @@ import java.io.IOException;
 /**
  * @author puzhao
  */
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends BaseActivity {
 
     PluginManager pluginManager;
 
@@ -29,13 +31,6 @@ public class TestActivity extends AppCompatActivity {
     private final static String PLUGIN2_VERSION_CODE = "1.0";
     private String versionCode2 = "";
 
-    @Override
-    public Resources getResources() {
-        if (pluginManager != null && pluginManager.getResources() != null){
-            return pluginManager.getResources();
-        }
-        return super.getResources();
-    }
 
     @Override
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
@@ -178,6 +173,28 @@ public class TestActivity extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Clean all fragment", Toast.LENGTH_SHORT).show();
             }
         });
+
+        findViewById(R.id.load_remote_activity_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(TestActivity.this, ProxyActivity.class);
+//                startActivity(intent);
+                try {
+                    Class clazz = getClassLoader().loadClass("com.kikatech.paul.pluginmodule1.ProxyActivity");
+                    Intent intent = new Intent(TestActivity.this, clazz);
+                    startActivity(intent);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
+    @Override
+    public ClassLoader getClassLoader() {
+        if (pluginManager != null && pluginManager.getPluginsDexClassLoader() != null){
+            return pluginManager.getPluginsDexClassLoader();
+        }
+        return super.getClassLoader();
+    }
 }
