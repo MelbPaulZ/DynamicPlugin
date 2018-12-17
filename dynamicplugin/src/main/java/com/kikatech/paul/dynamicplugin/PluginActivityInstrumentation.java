@@ -2,16 +2,10 @@ package com.kikatech.paul.dynamicplugin;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 
 /**

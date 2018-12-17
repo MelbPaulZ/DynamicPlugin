@@ -177,15 +177,15 @@ public class TestActivity extends BaseActivity {
         findViewById(R.id.load_remote_activity_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TestActivity.this, ProxyActivity.class);
-                startActivity(intent);
-//                try {
-//                    Class clazz = getClassLoader().loadClass("com.kikatech.paul.pluginmodule1.ProxyActivity");
-//                    Intent intent = new Intent(TestActivity.this, clazz);
-//                    startActivity(intent);
-//                } catch (ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                }
+//                Intent intent = new Intent(TestActivity.this, ProxyActivity.class);
+//                startActivity(intent);
+                try {
+                    Class clazz = getClassLoader().loadClass("com.kikatech.paul.pluginmodule1.ProxyActivity");
+                    Intent intent = new Intent(TestActivity.this, clazz);
+                    startActivity(intent);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
