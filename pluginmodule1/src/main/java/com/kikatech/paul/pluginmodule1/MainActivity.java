@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.kikatech.paul.dynamicplugin.LogUtil;
@@ -84,4 +85,8 @@ public class MainActivity extends AppCompatActivity implements PluginActivityInt
     public void onRestoreInstanceState(Bundle savedInstanceState) {
     }
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return false;
+    }
 }
