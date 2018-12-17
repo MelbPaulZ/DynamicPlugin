@@ -8,6 +8,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * @author puzhao
+ */
 public class PluginHooker {
 
     public static void hookInstrumentation(Context context){
@@ -21,7 +24,6 @@ public class PluginHooker {
 
             PluginActivityInstrumentation pluginActivityInstrumentation = new PluginActivityInstrumentation((Instrumentation) activityThreadInstrument);
             activityThreadInstrumentField.set(activityThreadObject, pluginActivityInstrumentation);
-            Log.d("","");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {

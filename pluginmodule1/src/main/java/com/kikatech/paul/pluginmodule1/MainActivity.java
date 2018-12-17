@@ -2,6 +2,7 @@ package com.kikatech.paul.pluginmodule1;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -51,9 +52,17 @@ public class MainActivity extends AppCompatActivity implements PluginActivityInt
     public void onCreate(Bundle savedInstanceState) {
         if (proxyActivity != null) {
             proxyActivity.setContentView(R.layout.activity_main);
-            PluginFragment pluginFragment = new PluginFragment();
-            proxyActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, pluginFragment).commit();
-            LogUtil.d("onCreate");
+            Class clazz = PluginFragment.class;
+            PluginFragment pluginFragment = null;
+            try {
+                pluginFragment = (PluginFragment) clazz.newInstance();
+                proxyActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, pluginFragment).commit();
+                LogUtil.d("onCreate");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
         }
     }
 

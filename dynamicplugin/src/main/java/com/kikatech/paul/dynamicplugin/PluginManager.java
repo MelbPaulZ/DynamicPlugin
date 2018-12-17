@@ -144,6 +144,17 @@ public class PluginManager implements PluginListener {
         pluginTotalResources = PluginResources.getPluginResources(context.getResources(), currentAssetManager);
     }
 
+    public synchronized boolean isClassInPlugin(String className){
+        Iterator<Plugin> pluginIterators = pluginApkNameToPluginMap.values().iterator();
+        while (pluginIterators.hasNext()){
+            Plugin plugin = pluginIterators.next();
+            if (className.startsWith(plugin.getPackageName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void onPluginLoaded(String pluginName) {

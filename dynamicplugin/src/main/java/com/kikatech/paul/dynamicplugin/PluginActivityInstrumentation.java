@@ -2,7 +2,17 @@ package com.kikatech.paul.dynamicplugin;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 
 /**
  * @author puzhao
@@ -21,17 +31,29 @@ public class PluginActivityInstrumentation extends Instrumentation {
         if (pluginManager != null && pluginManager.getPluginsDexClassLoader() != null){
             try {
                 activity = super.newActivity(pluginManager.getPluginsDexClassLoader(), className, intent);
+                if (pluginManager.isClassInPlugin(className)){
+                    Class superClass = activity.getClass();
+                    // find super class of activity
+                    while (!superClass.getName().equals(ContextThemeWrapper.class.getName())){
+                        superClass = superClass.getSuperclass();
+                    }
+                    Field field = superClass.getDeclaredField("mResources");
+                    field.setAccessible(true);
+                    field.set(activity, pluginManager.getResources());
+                }
             }catch (ClassNotFoundException ignore){
 
             }catch (IllegalAccessException ignore){
 
             }catch (InstantiationException ignore){
 
+            } catch (NoSuchFieldException ignore) {
+
             }
             if (activity != null){
                 return activity;
             }
         }
-        return super.newActivity(cl, className, intent);
+        return instrumentation.newActivity(cl, className, intent);
     }
 }
